@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {DefaultService} from '../../api';
 import {NavigationExtras, Params, Router} from '@angular/router';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
+// import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {ModalController} from '@ionic/angular';
 import Timeout = NodeJS.Timeout;
 
@@ -26,8 +26,7 @@ export class AuthenticationService {
 
     public async getUserId(): Promise<number> {
         console.log('Fetch Access Token for api access.');
-        const storage = new NativeStorage();
-        return await storage.getItem('userId');
+        return Number(localStorage.getItem('userId'));
     }
 
     /**
@@ -44,8 +43,7 @@ export class AuthenticationService {
             const token = response.body;
             this.api.configuration.accessToken = token.token;
             await this.setToken(token.token);
-            const storage = new NativeStorage();
-            await storage.setItem('userId', token.uid);
+            localStorage.setItem('userId', String(token.uid));
             console.log(`Successfully logged in user ${token.uid}.`);
             if (this.intervalId === undefined) {
                 this.intervalId = setTimeout(this.refreshToken.bind(this), this.refreshCycle);
@@ -60,12 +58,12 @@ export class AuthenticationService {
     public async loggedIn(): Promise<boolean> {
         let loggedIn = false;
         const item = await this.getToken();
-        if (item !== undefined) {
+        if (item !== null) {
             try {
                 this.api.configuration.accessToken = item;
                 this.api.configuration.withCredentials = true;
                 await this.refreshToken();
-                loggedIn = (await this.getToken() !== undefined);
+                loggedIn = (await this.getToken() !== null);
             } catch (e) {
                 if (e.status === 401) {
                     this.logout();
@@ -82,8 +80,7 @@ export class AuthenticationService {
     public async getToken(): Promise<string> {
         console.log('Fetch Access Token for api access.');
         try {
-            const storage = new NativeStorage();
-            return await storage.getItem('accessToken');
+            return localStorage.getItem('accessToken');
         } catch (e) {
             if (e.code !== 2) {
                 console.error(e);
@@ -99,10 +96,9 @@ export class AuthenticationService {
         if (this.intervalId !== undefined) {
             clearTimeout(this.intervalId);
         }
-        const storage = new NativeStorage();
         this.api.configuration.accessToken = await this.getToken();
-        storage.remove('accessToken');
-        storage.remove('userId');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
         this.router.navigate(['/login'], <NavigationExtras>{
             queryParams: <Params>{
                 timeout: '0'
@@ -134,9 +130,8 @@ export class AuthenticationService {
                 this.intervalId = setTimeout(this.refreshToken.bind(this), this.refreshCycle);
             }
         } catch (e) {
-            const storage = new NativeStorage();
-            await storage.remove('accessToken');
-            await storage.remove('userId');
+            await localStorage.removeItem('accessToken');
+            await localStorage.removeItem('userId');
             if (this.intervalId !== undefined) {
                 clearTimeout(this.intervalId);
             }
@@ -153,8 +148,7 @@ export class AuthenticationService {
     }
 
     private async setToken(token: string) {
-        const storage = new NativeStorage();
-        await storage.setItem('accessToken', token);
+        localStorage.setItem('accessToken', token);
         console.log('Refreshed Access Token.');
     }
 }

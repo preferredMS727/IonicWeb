@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
+// import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {AlertButton} from '@ionic/core';
 import {PageUtilsService} from '../../../service/page-utils.service';
 import {AuthenticationService} from '../../../service/authentication.service';
@@ -23,15 +23,20 @@ export class HomePage {
      * This method displays an introduction
      */
     ionViewDidEnter() {
-        const storage = new NativeStorage();
-        storage.getItem('suppressIntroduction').catch(async error => {
-            if (error.code === 2) {
-                this.presentIntroductionPopup();
-            } else {
-                console.error(error);
-                await this.pageUtils.unavailableAlert(error);
-            }
-        });
+        // const storage = new NativeStorage();
+        // storage.getItem('suppressIntroduction').catch(async error => {
+        //     if (error.code === 2) {
+        //         this.presentIntroductionPopup();
+        //     } else {
+        //         console.error(error);
+        //         await this.pageUtils.unavailableAlert(error);
+        //     }
+        // });
+
+        const suppressIntroduction = localStorage.getItem('suppressIntroduction');
+        if (!suppressIntroduction) {
+            this.presentIntroductionPopup();
+        }
     }
 
     /**
@@ -48,8 +53,8 @@ export class HomePage {
                 {
                     text: this.translate.instant('GENERAL.DO_NOT_SHOW_BTN'),
                     handler: async () => {
-                        const storage = new NativeStorage();
-                        await storage.setItem('suppressIntroduction', true);
+                        // const storage = new NativeStorage();
+                        localStorage.setItem('suppressIntroduction', String(true));
                     }
                 }
             ]

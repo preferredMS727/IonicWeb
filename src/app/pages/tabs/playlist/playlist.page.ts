@@ -5,7 +5,7 @@ import {AlertController} from '@ionic/angular';
 import {AuthenticationService} from '../../../service/authentication.service';
 import {Chart} from 'chart.js';
 import {PageUtilsService} from '../../../service/page-utils.service';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
+// import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {TranslateService} from '@ngx-translate/core';
 import {AlertButton} from '@ionic/core';
 import {PlaylistService} from '../../../service/playlist.service';
@@ -103,15 +103,19 @@ export class PlaylistPage implements OnInit {
 
     async ionViewDidEnter() {
         const userId = await this.authService.getUserId();
-        const storage = new NativeStorage();
-        storage.getItem('suppressPlaylistIntroduction').catch(async error => {
-            if (error.code === 2) {
-                this.presentIntroductionPopup();
-            } else {
-                console.error(error);
-                await this.pageUtils.unavailableAlert(error, userId);
-            }
-        });
+        const suppressPlaylistIntroduction = localStorage.getItem('suppressPlaylistIntroduction');
+        if (!suppressPlaylistIntroduction) {
+            this.presentIntroductionPopup();
+        }
+        // const storage = new NativeStorage();
+        // storage.getItem('suppressPlaylistIntroduction').catch(async error => {
+        //     if (error.code === 2) {
+        //         this.presentIntroductionPopup();
+        //     } else {
+        //         console.error(error);
+        //         await this.pageUtils.unavailableAlert(error, userId);
+        //     }
+        // });
 
         this.profileService.getProfile(userId).then(
             async (userProfile: User) => {
@@ -149,8 +153,9 @@ export class PlaylistPage implements OnInit {
     }
 
     private async suppressIntroductionHandler() {
-        const storage = new NativeStorage();
-        await storage.setItem('suppressPlaylistIntroduction', true);
+        // const storage = new NativeStorage();
+        // await storage.setItem('suppressPlaylistIntroduction', true);
+        localStorage.setItem('suppressPlaylistIntroduction', String(true));
     }
 
     /**

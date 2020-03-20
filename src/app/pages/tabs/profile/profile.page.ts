@@ -12,7 +12,7 @@ import {AuthenticationService} from '../../../service/authentication.service';
 import {PlaylistService} from '../../../service/playlist.service';
 import {TabsPage} from '../tabs.page';
 import {ProfileService} from '../../../service/profile.service';
-import {AppVersion} from '@ionic-native/app-version/ngx';
+// import {AppVersion} from '@ionic-native/app-version/ngx';
 import Timeout = NodeJS.Timeout;
 
 @Component({
@@ -59,7 +59,8 @@ export class ProfilePage {
                 private playlistService: PlaylistService,
                 private profileService: ProfileService,
                 private tabsPage: TabsPage,
-                private appVersion: AppVersion) {
+                // private appVersion: AppVersion
+                ) {
     }
 
     /**
@@ -67,7 +68,7 @@ export class ProfilePage {
      */
     async ionViewWillEnter() {
         await this.refreshProfileData();
-        this.version = await this.appVersion.getVersionNumber();
+        // this.version = await this.appVersion.getVersionNumber();
     }
 
     private async refreshProfileData() {

@@ -4,7 +4,7 @@ import {PageUtilsService} from '../../../../service/page-utils.service';
 import {AlertController, ModalController} from '@ionic/angular';
 import {AddComponent} from '../add/add.component';
 import {InstructionComponent} from '../instruction/instruction.component';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
+// import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {AlertButton, AlertInput, AlertOptions} from '@ionic/core';
 import {TranslateService} from '@ngx-translate/core';
 import TypeEnum = Asset.TypeEnum;
@@ -31,7 +31,7 @@ export class SearchComponent {
                 public modalCtrl: ModalController,
                 public alertCtrl: AlertController,
                 private translate: TranslateService,
-                private storage: NativeStorage,
+                // private storage: NativeStorage,
                 private pageUtils: PageUtilsService) {
     }
 
@@ -63,21 +63,28 @@ export class SearchComponent {
                     handler: async (data) => {
                         if (data.insuranceName !== '') {
                             insurance.name = data.insuranceName;
-                            this.storage.getItem('suppressInstruction')
-                                .then((suppress: boolean) => {
-                                    if (suppress) {
-                                        this.addPage(insurance);
-                                    } else {
-                                        this.showInstructions(() => this.addPage(insurance), insurance.type);
-                                    }
-                                }).catch(async error1 => {
-                                if (error1.code === 2) {
-                                    this.showInstructions(() => this.addPage(insurance), insurance.type);
-                                } else {
-                                    console.error(error1);
-                                    await this.pageUtils.unavailableAlert(error1, this.userId);
-                                }
-                            });
+                            const suppressInstruction = localStorage.getItem('suppressInstruction');
+                            if (suppressInstruction) {
+                                this.addPage(insurance);
+                            } else {
+                                this.showInstructions(() => this.addPage(insurance), insurance.type);
+                            }
+
+                            // this.storage.getItem('suppressInstruction')
+                            //     .then((suppress: boolean) => {
+                            //         if (suppress) {
+                            //             this.addPage(insurance);
+                            //         } else {
+                            //             this.showInstructions(() => this.addPage(insurance), insurance.type);
+                            //         }
+                            //     }).catch(async error1 => {
+                            //     if (error1.code === 2) {
+                            //         this.showInstructions(() => this.addPage(insurance), insurance.type);
+                            //     } else {
+                            //         console.error(error1);
+                            //         await this.pageUtils.unavailableAlert(error1, this.userId);
+                            //     }
+                            // });
                         } else {
                             this.addInsurance(
                                 insurance,

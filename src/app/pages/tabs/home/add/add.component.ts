@@ -3,7 +3,7 @@ import {Asset, DefaultService} from '../../../../../api';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 // import {AbbyyRTR, TextCaptureResult} from '@ionic-native/abbyy-rtr/ngx';
 import {AlertController, ModalController, ToastController} from '@ionic/angular';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
+// import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageUtilsService} from '../../../../service/page-utils.service';
 import {File, FileEntry} from '@ionic-native/file/ngx';
@@ -103,8 +103,8 @@ export class AddComponent implements OnInit {
                 private file: File,
                 private api: DefaultService,
                 private translate: TranslateService,
-                private storage: NativeStorage,
-                private camera: Camera,
+                // private storage: NativeStorage,
+                // private camera: Camera,
                 private alertCtrl: AlertController,
                 public modalCtrl: ModalController,
                 private toastCtrl: ToastController,
@@ -179,19 +179,19 @@ export class AddComponent implements OnInit {
      * This method makes the user take the complete photo of a certain insurance
      */
     private takePhoto() {
-        this.camera.getPicture({
-            quality: 50,
-            destinationType: this.camera.DestinationType.FILE_URI,
-            encodingType: this.camera.EncodingType.PNG,
-            mediaType: this.camera.MediaType.PICTURE
-        }).then((imageData) => {
-            // imageData is either a base64 encoded string or a file URI
-            // If it's base64 (DATA_URL):
-            this.imageAsB64.set(++this.photoIndex, imageData);
-            this.cd.markForCheck();
-        }, (err) => {
-            console.error(err);
-        });
+        // this.camera.getPicture({
+        //     quality: 50,
+        //     destinationType: this.camera.DestinationType.FILE_URI,
+        //     encodingType: this.camera.EncodingType.PNG,
+        //     mediaType: this.camera.MediaType.PICTURE
+        // }).then((imageData) => {
+        //     // imageData is either a base64 encoded string or a file URI
+        //     // If it's base64 (DATA_URL):
+        //     this.imageAsB64.set(++this.photoIndex, imageData);
+        //     this.cd.markForCheck();
+        // }, (err) => {
+        //     console.error(err);
+        // });
     }
 
     public async deletePhoto(index: number) {
